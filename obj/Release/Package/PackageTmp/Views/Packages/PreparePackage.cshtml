@@ -1,0 +1,41 @@
+﻿@using DronePostWeb.Models
+@model DronePostWeb.Models.PreparePackageViewModel
+@{
+    ViewBag.Title = "PreparePackage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>PreparePackage</h2>
+
+@using (Html.BeginForm("PreparePackageForm", "Packages", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.RecipientPhone, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.RecipientPhone, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.StationId, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(m => m.StationId, new SelectList(Holder.Context.Stations.Include("City").ToList(), "Id", "Id"), "Select station", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.PackageSizeId, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(m => m.PackageSizeId, new SelectList(Holder.Context.PackageSizes.ToList(), "Id", "Name"), "Select package size", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.PackageWeight, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.PackageWeight, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-primary" value="Create" />
+        </div>
+    </div>
+}

@@ -1,0 +1,92 @@
+﻿@using DronePostWeb.Models
+@model DronePostWeb.Models.Consumer
+@{
+    ViewBag.Title = "ConsumerDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    int cityId = Holder.Context.Consumers.Include("City").Single(c => c.Id == Model.Id).City.Id;
+}
+
+<div class="jumbotron">
+    <h2>Consumer details</h2>
+</div>
+
+<div>
+    @using (Html.BeginForm("ChangeConsumerDataForm", "Consumers", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Lastname, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Lastname, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.BirthDate, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.HiddenFor(m => m.BirthDate, new { @class = "datepicker form-control", @type = "datetime" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.PhoneNumber, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.City, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.City.Id, new SelectList(new ApplicationDbContext().Cities.ToList(), "Id", "Name", cityId), "Select city", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+            </div>
+        </div>
+
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.Balance)
+        @Html.HiddenFor(m => m.PESEL)
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-primary" value="Save" />
+            </div>
+        </div>
+    }
+    <div class="btn-group-sm">
+        @using (Html.BeginForm("DeleteConsumer", "Consumers", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.HiddenFor(m => m.Id)
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-danger" value="Delete" />
+                </div>
+            </div>
+        }
+        @using (Html.BeginForm("PrintVersionSingle", "Consumers", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.HiddenFor(m => m.Id)
+            @Html.HiddenFor(m => m.Name)
+            @Html.HiddenFor(m => m.Lastname)
+            @Html.HiddenFor(m => m.PhoneNumber)
+            @Html.HiddenFor(m => m.PESEL)
+            @Html.HiddenFor(m => m.BirthDate)
+            @Html.HiddenFor(m => m.City)
+            @Html.HiddenFor(m => m.Address)
+            @Html.HiddenFor(m => m.Balance)
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-info" value="Print version" />
+                </div>
+            </div>
+        }
+    </div>
+</div>

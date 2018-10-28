@@ -1,0 +1,35 @@
+﻿@model List<DronePostWeb.Models.Consumer>
+@{
+    ViewBag.Title = "Search Result";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="jumbotron">
+    <h2>Search Result</h2>
+</div>
+
+<div>
+    <table id="consumers" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Lastname</th>
+                <th>Address</th>
+                <th>Phone number</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var consumer in Model)
+            {
+                <tr>
+                    <td>@consumer.Name</td>
+                    <td>@consumer.Lastname</td>
+                    <td>@(consumer.City != null ? consumer.City.Name + ", " : "") @consumer.Address</td>
+                    <td>@consumer.PhoneNumber</td>
+                    <td>@Html.ActionLink("Details", "ConsumerDetails", "Consumers", consumer, new { @class = "btn btn-info" })</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

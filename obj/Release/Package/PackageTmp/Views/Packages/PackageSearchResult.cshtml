@@ -1,0 +1,32 @@
+﻿@using DronePostWeb.Models
+@model DronePostWeb.Models.Package
+
+@{
+    ViewBag.Title = "Package Search Result";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<Transfer> transfers = Holder.Context.Transfers.Include("Package").Include("DepartureStation").Include("ArrivalStation").Include("DepartureStation.City").Include("ArrivalStation.City").ToList();
+}
+
+<h2>Package @Model.Code</h2>
+
+@if (Model == null)
+{
+    <h4>Not found</h4>
+}
+else
+{
+    <div class="list-group">
+        <ul>
+            @foreach (var transfer in transfers)
+            {
+                if (transfer.Package == Model)
+                {
+                    <il>
+                        <p>@(transfer.Departure != null ? "Departed at " + transfer.Departure.ToString() : "") @(transfer.DepartureStation != null ? " from " + transfer.DepartureStation.City.Name + " " + transfer.DepartureStation.Id : "") -> @(transfer.Arrival != null ? "Arrived at " + transfer.Arrival.ToString() + " to " + transfer.ArrivalStation.City.Name + " " + transfer.ArrivalStation.Id: "On the way...")</p>
+                    </il>
+                }
+            }
+        </ul>
+    </div>
+}

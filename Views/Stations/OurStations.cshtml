@@ -1,0 +1,34 @@
+﻿@using DronePostWeb.Models
+
+@{
+    ViewBag.Title = "OurStations";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var stations = Holder.Context.Stations.Include("City").ToList();
+}
+
+<div class="jumbotron">
+    <h2>Our stations</h2>
+</div>
+<table id="income" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Station Number</th>
+            <th>Address</th>
+            <th>Latitude</th>
+            <th>Wideness</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var station in stations)
+        {
+            <tr>
+                <td>@station.Id</td>
+                <td>@(station.City != null ? station.City.Name + ", " : "") @station.Address</td>
+                <td>@station.Latitude</td>
+                <td>@station.Wideness</td>
+            </tr>
+        }
+
+    </tbody>
+</table>

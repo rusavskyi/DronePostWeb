@@ -1,0 +1,64 @@
+﻿@using DronePostWeb.Models
+@using Microsoft.AspNet.Identity
+@{
+    var userId = User.Identity.GetUserId();
+    var user = Holder.UserManager.FindById(userId);
+}
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink(Holder.ApplicationName + (User.IsInRole(Holder.AdminRole) ? "_Admin" : ""), "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        </div>
+        <div class="navbar-collapse collapse">
+            @if (user != null)
+            {
+                
+
+                if (user.IsWorker)
+                {
+                    var type = Holder.Context.WorkerUserTab.Include("Worker").Include("Worker.WorkerType").Single(w => w.UserId == userId).Worker.WorkerType.Name;
+
+                    <ul class="nav navbar-nav">
+                        @if (User.IsInRole(Holder.AdminRole) || type == Holder.ManagerType)
+                        {
+                            <li>@Html.ActionLink("Employees", "Index", "Employees")</li>
+                            <li>@Html.ActionLink("Stations", "Index", "Stations")</li>
+
+                        }
+                        @if (User.IsInRole(Holder.AdminRole) || type == Holder.ServiceType)
+                        {
+                            <li>@Html.ActionLink("Consumers", "Index", "Consumers")</li>
+
+                        }
+                        @if (User.IsInRole(Holder.AdminRole) || type == Holder.TechnicalType)
+                        {
+                            <li>@Html.ActionLink("Drones", "Index", "Drones")</li>
+
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("My packages", "MyPackages", "Packages")</li>
+                        <li>@Html.ActionLink("Our stations", "OurStations", "Stations")</li>
+                        <li>@Html.ActionLink("Prepare package", "PreparePackage", "Packages")</li>
+                    </ul>
+                }
+            }
+            else
+            {
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Find package", "FindPackage", "Packages")</li>
+                    <li>@Html.ActionLink("Our stations", "OurStations", "Stations")</li>
+                </ul>
+            }
+            @Html.Partial("_LoginPartial")
+        </div>
+    </div>
+</div>

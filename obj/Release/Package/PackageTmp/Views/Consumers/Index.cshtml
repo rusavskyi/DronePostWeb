@@ -1,0 +1,44 @@
+﻿@using DronePostWeb.Models
+
+@{
+    ViewBag.Title = "Consumers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var consumers = Holder.Context.Consumers.Include("City").ToList();
+}
+
+
+<div class="jumbotron">
+    <h2>Consumers</h2>
+    <div class="btn-group">
+        @Html.ActionLink("Find consumer", "FindConsumer", "Consumers", new { @class = "btn btn-default" })
+        @Html.ActionLink("Add new consumer", "AddNewConsumer", "Consumers", new { @class = "btn btn-default" })
+        @Html.ActionLink("Print version", "PrintVersionAll", "Consumers", new { @class = "btn btn-default" })
+    </div>
+</div>
+
+<div>
+    <table id="consumers" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Lastname</th>
+                <th>Address</th>
+                <th>Phone number</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var consumer in consumers)
+            {
+                <tr>
+                    <td>@consumer.Name</td>
+                    <td>@consumer.Lastname</td>
+                    <td>@(consumer.City != null ? consumer.City.Name + ", " : "") @consumer.Address</td>
+                    <td>@consumer.PhoneNumber</td>
+                    <td>@Html.ActionLink("Details", "ConsumerDetails", "Consumers", consumer, new { @class = "btn btn-info" })</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

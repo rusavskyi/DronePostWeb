@@ -1,0 +1,115 @@
+﻿@using DronePostWeb.Models
+@model Worker
+
+@{
+    ViewBag.Title = "EmployeDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int cityId = 0;
+    int stationId = 0;
+    int typeId = 0;
+
+    if (Model != null)
+    {
+        var workerTmp = Holder.Context.Workers.Include("WorkStation").Include("WorkerType").Include("City").Single(w => w.Id == Model.Id);
+        cityId = workerTmp.City.Id;
+        stationId = workerTmp.WorkStation.Id;
+        typeId = workerTmp.WorkerType.Id;
+    }
+}
+
+<div class="jumbotron">
+    <h2>Employe details</h2>
+</div>
+
+<div>
+    @using (Html.BeginForm("ChangeEmployeDataForm", "Employees", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        <div class="form-group">
+            @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Lastname, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Lastname, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.BirthDate, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.HiddenFor(m => m.BirthDate,new { @class = "form-control", type = "datetime" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.PhoneNumber, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.City, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.City.Id, new SelectList(new ApplicationDbContext().Cities.ToList(), "Id", "Name", cityId), "Select city", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Address, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.WorkStation, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.WorkStation.Id, new SelectList(new ApplicationDbContext().Stations.ToList(), "Id", "Id", stationId), "Select station", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.EmployementDate, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.HiddenFor(m => m.EmployementDate, new { @class = "form-control", type="datetime"})
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.WorkerType, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.WorkerType.Id, new SelectList(new ApplicationDbContext().WorkerTypes.ToList(), "Id", "Name", typeId), "Select position", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Salery, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Salery, new { @class = "form-control" })
+            </div>
+        </div>
+
+        @Html.HiddenFor(m => m.Id);
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" class="btn btn-primary" value="Save" />
+            </div>
+        </div>
+    }
+    <div class="btn-group-sm">
+        @using (Html.BeginForm("DeleteEmploye", "Employees", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.HiddenFor(m => m.Id)
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-danger" value="Delete" />
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker1').datetimepicker();
+        });
+    </script>
+}

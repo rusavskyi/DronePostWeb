@@ -1,0 +1,72 @@
+﻿@using DronePostWeb.Models
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework
+@model DronePostWeb.Models.Consumer
+
+@{
+    ViewBag.Title = Model.Name + " " + Model.Lastname;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var consumer = Holder.Context.Consumers.Include("City").Single(c => c.Id == Model.Id);
+    var userManger = new ApplicationUserManager(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+    var userId = Holder.Context.ConsumerUserTab.Include("Consumer").Single(cu => cu.Consumer.Id == consumer.Id).UserId;
+    var email = userManger.FindById(userId).Email;
+}
+
+<h2>@consumer.Lastname, @consumer.Name</h2>
+
+<div>
+    <h4>Consumer</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            Email
+        </dt>
+
+        <dd>
+            @email    
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PESEL)
+        </dt>
+
+        <dd>
+            @consumer.PESEL
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+
+        <dd>
+            @consumer.PhoneNumber
+        </dd>
+        
+        <dt>
+            City
+        </dt>
+        
+        <dd>
+            @consumer.City.Name
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+
+        <dd>
+            @consumer.Address
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BirthDate)
+        </dt>
+
+        <dd>
+            @consumer.BirthDate.Day-@consumer.BirthDate.Month-@consumer.BirthDate.Year
+        </dd>
+
+    </dl>
+</div>

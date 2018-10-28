@@ -1,0 +1,49 @@
+﻿@using DronePostWeb.Models
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var workers = Holder.Context.Workers.Include("City").Include("WorkStation").Include("WorkStation.City").Include("WorkerType").ToList();
+
+}
+
+
+
+<div class="jumbotron">
+    <h2>Employees</h2>
+    <div class="btn-group">
+        @Html.ActionLink("Find employe", "FindEmploye", "Employes", new { @class = "btn btn-default" })
+        @Html.ActionLink("Add new employe", "AddNewEmploye", "Employes", new { @class = "btn btn-default" })
+    </div>
+</div>
+
+<div>
+    <table id="consumers" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Lastname</th>
+            <th>Address</th>
+            <th>Phone number</th>
+            <th>Work station</th>
+            <th>Position</th>
+            <th>Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var worker in workers)
+        {
+            <tr>
+                <td>@worker.Name</td>
+                <td>@worker.Lastname</td>
+                <td>@(worker.City != null ? worker.City.Name + ", " : "") @worker.Address</td>
+                <td>@worker.PhoneNumber</td>
+                <td>@(worker.WorkStation.City != null ? worker.WorkStation.City.Name + " " : "") @worker.WorkStation.Id</td>
+                <td>@worker.WorkerType.Name</td>
+                <td>@Html.ActionLink("Details", "EmployeDetails", "Employees", worker, new { @class = "btn btn-info" })</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+

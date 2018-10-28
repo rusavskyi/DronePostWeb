@@ -1,0 +1,100 @@
+﻿@using DronePostWeb.Models
+@using Microsoft.AspNet.Identity
+
+@{
+    ViewBag.Title = "MyPackages";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var consUsers = Holder.Context.ConsumerUserTab.Include("Consumer").ToList();
+    Consumer consumer = null;
+    foreach (var consUser in consUsers)
+    {
+        if (consUser.UserId == User.Identity.GetUserId())
+        {
+            consumer = consUser.Consumer;
+        }
+    }
+    var packages = Holder.Context.Packages.Include("Sender").Include("TargetStation").Include("TargetStation.City").ToList();
+    var transfers = Holder.Context.Transfers.Include("DepartureStation").Include("DepartureStation.City").Include("ArrivalStation").Include("ArrivalStation.City").Include("Package").ToList();
+}
+
+<div class="jumbotron">
+    <h2>My packages</h2>
+</div>
+
+<h4>Sended packages</h4>
+<table id="sended" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Package code</th>
+            <th>Recipient phone number</th>
+            <th>Target station</th>
+            <th>Transfers</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var package in packages)
+        {
+            if (consumer == package.Sender)
+            {
+                <tr>
+                    <td>@package.Code</td>
+                    <td>@package.RecipientPhoneNumber</td>
+                    <td>@package.TargetStation.City.Name @package.TargetStation.Id</td>
+                    <td>
+                        <ul>
+                            @foreach (var transfer in transfers)
+                            {
+                                if (package == transfer.Package)
+                                {
+                                    <il>
+                                        <p>@(transfer.Departure != null ? "Departed at " + transfer.Departure.ToString() : "") @(transfer.DepartureStation != null ? " from " + transfer.DepartureStation.City.Name + " " + transfer.DepartureStation.Id : "") -> @(transfer.Arrival != null ? "Arrived at " + transfer.Arrival.ToString() + " to " + transfer.ArrivalStation.City.Name + " " + transfer.ArrivalStation.Id : "On the way...")</p>
+                                    </il>
+                                }
+                            }
+                        </ul>
+                    </td>
+
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<h4>Income packages</h4>
+<table id="income" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Package code</th>
+            <th>Sender</th>
+            <th>Target station</th>
+            <th>Transfers</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var package in packages)
+        {
+            if (consumer.PhoneNumber == package.RecipientPhoneNumber)
+            {
+                <tr>
+                    <td>@package.Code</td>
+                    <td>@package.Sender.Name @package.Sender.Lastname</td>
+                    <td>@package.TargetStation.City.Name @package.TargetStation.Id</td>
+                    <td>
+                        <ul>
+                            @foreach (var transfer in transfers)
+                            {
+                                if (package == transfer.Package)
+                                {
+                                    <il>
+                                        <p>@(transfer.Departure != null ? "Departed at " + transfer.Departure.ToString() : "") @(transfer.DepartureStation != null ? " from " + transfer.DepartureStation.City.Name + " " + transfer.DepartureStation.Id : "") -> @(transfer.Arrival != null ? "Arrived at " + transfer.Arrival.ToString() + " to " + transfer.ArrivalStation.City.Name + " " + transfer.ArrivalStation.Id : "On the way...")</p>
+                                    </il>
+                                }
+                            }
+                        </ul>
+                    </td>
+
+                </tr>
+            }
+        }
+    </tbody>
+</table>
